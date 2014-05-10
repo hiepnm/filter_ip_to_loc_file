@@ -54,9 +54,6 @@ int collect_data_new_file(const char* file_name, char** sz_error) {
 	while (fgets(line_buffer, sizeof(line_buffer), fptr)) {
 		char regid[3];
 		sscanf(line_buffer, "%d.%d.%d.%d,%d.%d.%d.%d,%d,%d,%c%c,%[0-9a-zA-Z ,\"]", &l1,&l2,&l3,&l4, &u1,&u2,&u3,&u4, &lower, &upper, &regid[0], &regid[1], name);
-		if (strcmp(name, "\"Korea, Republic of\"") == 0) {
-			printf("line: %s", line_buffer);
-		}
 		regid[2]='\0';
 		std::string key(regid);
 		if (loc_map.find(key) == loc_map.end()) {
@@ -82,7 +79,7 @@ int flush_data(const char* file_name, char** sz_error) {
 	}
 	std::map<std::string, location>::iterator it;
 	for(it = loc_map.begin(); it != loc_map.end(); it++) {
-		fprintf(fptr, "%c%c\t%d\t%s\n", it->second.regid[0], it->second.regid[1], it->second.regnum, it->second.regname);
+		fprintf(fptr, "%c%c,%d,%s\n", it->second.regid[0], it->second.regid[1], it->second.regnum, it->second.regname);
 	}
 	fclose(fptr);
 	return 0;
